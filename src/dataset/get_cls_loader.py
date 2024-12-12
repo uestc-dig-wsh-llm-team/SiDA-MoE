@@ -86,10 +86,10 @@ def get_text_cls_loader(
     
     if dataset_name == "multirc":
         # Load MultiRC dataset
-        dataset = load_dataset("super_glue", "multirc", cache_dir=f"{tmp_dir}")
+        dataset = load_dataset("multirc", cache_dir=f"{tmp_dir}")
     else:
         # Load dataset
-        dataset = load_dataset("glue", f"{dataset_name}", cache_dir=f"{tmp_dir}")
+        dataset = load_dataset(f"{dataset_name}", cache_dir=f"{tmp_dir}")
 
     dataset = dataset.shuffle(seed=42)
     # Load tokenizer
