@@ -1,0 +1,25 @@
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "name": "Python 调试程序: 当前文件",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/latency_breakdown.py",
+            "args": [
+                "--baseline","1",
+                "--dataset","sst2",
+                "--model","switch-base-256"
+            ],
+            "console": "integratedTerminal",
+            "env": {
+                "HF_ENDPOINT":"https://hf-mirror.com",
+                "CUDA_VISIBLE_DEVICES":"0"
+            }
+        }
+    ]
+}
