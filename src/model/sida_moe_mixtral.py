@@ -45,14 +45,14 @@ class MixtralSparseMoeBlock(nn.Module):
         if isinstance(hash_table[key], tuple):
             is_soft_target = True
             # The hash table contains expert indices and probabilities
-            expert_index = hash_table[key][1][
+            selected_experts = hash_table[key][1][
                 batch_idx * local_batch_size : (batch_idx + 1) * local_batch_size, :, :
-            ]
+            ]   # 当前Batch的index [seq_len, 专家数量]
             expert_prob = hash_table[key][0][
                 batch_idx * local_batch_size : (batch_idx + 1) * local_batch_size, :, :
             ]
         else:
-            expert_index = hash_table[key][
+            selected_experts = hash_table[key][
                 batch_idx * local_batch_size : (batch_idx + 1) * local_batch_size, :, :
             ]
 
@@ -62,7 +62,8 @@ class MixtralSparseMoeBlock(nn.Module):
         router_logits = self.gate(hidden_states)
 
         routing_weights = F.softmax(router_logits, dim=1, dtype=torch.float)
-        routing_weights, selected_experts = torch.topk(routing_weights, self.top_k, dim=-1)
+        # routing_weights, selected_experts = torch.topk(routing_weights, self.top_k, dim=-1)
+        routing_weights = torch.gather(original_routing_weights, -1, selected_experts)
         routing_weights /= routing_weights.sum(dim=-1, keepdim=True)
         # we cast back to the input dtype
         routing_weights = routing_weights.to(hidden_states.dtype)
